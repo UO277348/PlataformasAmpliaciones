@@ -6,6 +6,12 @@ Projectile::Projectile(float x, float y, Game* game) :
 	vy = -1; // La gravedad inicial es 1
 }
 
+Projectile::Projectile(string filename, float x, float y, Game* game, bool enemyShot) :
+	Actor(filename, x, y, 20, 20, game) {
+	vx = -9;
+	this->enemyShot = enemyShot;
+}
+
 void Projectile::update() {
 	vy = vy - 1; // La gravedad suma 1 en cada actualización restamos para anularla 
 }

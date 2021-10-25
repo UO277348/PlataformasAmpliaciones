@@ -79,7 +79,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case 'E': {
-		Enemy* enemy = new Enemy(x, y, game);
+		Enemy* enemy = new Minion(x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
@@ -213,6 +213,10 @@ void GameLayer::update() {
 	player->update();
 	for (auto const& enemy : enemies) {
 		enemy->update();
+		Projectile* newProjectile = enemy->shootPlayer();
+		if (newProjectile != NULL) {
+			projectiles.push_back(newProjectile);
+		}
 	}
 	for (auto const& projectile : projectiles) {
 		projectile->update();
@@ -251,7 +255,7 @@ void GameLayer::update() {
 
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
-			if (enemy->isOverlap(projectile)) {
+			if (enemy->isOverlap(projectile) && !projectile->enemyShot && enemy->vidas == 1) {
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end();
@@ -266,6 +270,25 @@ void GameLayer::update() {
 				textPoints->content = to_string(points);
 
 
+			}
+			else if (enemy->isOverlap(projectile) && !projectile->enemyShot && enemy->vidas > 1) {
+				bool pInList = std::find(deleteProjectiles.begin(),
+					deleteProjectiles.end(),
+					projectile) != deleteProjectiles.end();
+
+				if (!pInList) {
+					deleteProjectiles.push_back(projectile);
+				}
+
+				enemy->vidas--;
+			}
+
+			if (player->isOverlap(projectile) && projectile->enemyShot) {
+				player->loseLife();
+				if (player->lifes <= 0) {
+					init();
+					return;
+				}
 			}
 		}
 	}

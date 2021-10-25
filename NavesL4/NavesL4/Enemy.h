@@ -2,17 +2,26 @@
 
 #include "Actor.h"
 #include "Animation.h" 
+#include "Projectile.h"
 
 class Enemy : public Actor
 {
 public:
-	Enemy(float x, float y, Game* game);
+	Enemy(string filename, float x, float y, float fileWidth, float fileHeight, Game* game);
 	void draw(float scrollX = 0) override; // Va a sobrescribir
-	void update();
-	void impacted(); // Recibe impacto y pone animación de morir
+	virtual void update();
+	virtual void impacted(); // Recibe impacto y pone animación de morir
+
+	Animation* aDying = aDying;
+	Animation* aMoving = nullptr;
+	Animation* animation = nullptr; // Referencia a la animación mostrada
+
 	float vxIntelligence;
 	int state;
-	Animation* aDying;
-	Animation* aMoving;
-	Animation* animation; // Referencia a la animación mostrada
+
+	int vidas = 1;
+	int shootCadence = 0;
+	int shootTime = -1;
+	virtual Projectile* shootPlayer();
 };
+
