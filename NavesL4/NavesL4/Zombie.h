@@ -7,7 +7,8 @@ class Zombie : public Enemy
 public:
 	Zombie(float x, float y, Game* game);
 
-	bool onAir;
+	void update() override;
+	Projectile* shootPlayer() override;
 	int orientation;
 
 	Animation* aIdleRight;

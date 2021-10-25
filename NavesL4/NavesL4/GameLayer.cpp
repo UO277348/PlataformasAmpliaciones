@@ -86,6 +86,14 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addDynamicActor(enemy);
 		break;
 	}
+	case 'Z': {
+		Enemy* enemy = new Zombie(x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		enemy->y = enemy->y - enemy->height / 2;
+		enemies.push_back(enemy);
+		space->addDynamicActor(enemy);
+		break;
+	}
 	case '1': {
 		player = new Player(x, y, game);
 		// modificación para empezar a contar desde el suelo.
@@ -215,6 +223,7 @@ void GameLayer::update() {
 		enemy->update();
 		Projectile* newProjectile = enemy->shootPlayer();
 		if (newProjectile != NULL) {
+			space->addDynamicActor(newProjectile);
 			projectiles.push_back(newProjectile);
 		}
 	}
@@ -337,7 +346,6 @@ void GameLayer::calculateScroll() {
 		}
 	}
 }
-
 
 void GameLayer::draw() {
 	calculateScroll();
@@ -499,8 +507,6 @@ void GameLayer::keysToControls(SDL_Event event) {
 			controlShoot = true;
 			break;
 		}
-
-
 	}
 	if (event.type == SDL_KEYUP) {
 		int code = event.key.keysym.sym;
@@ -530,8 +536,6 @@ void GameLayer::keysToControls(SDL_Event event) {
 			controlShoot = false;
 			break;
 		}
-
 	}
-
 }
 

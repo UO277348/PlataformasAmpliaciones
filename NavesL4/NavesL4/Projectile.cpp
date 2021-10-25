@@ -7,8 +7,9 @@ Projectile::Projectile(float x, float y, Game* game) :
 }
 
 Projectile::Projectile(string filename, float x, float y, Game* game, bool enemyShot) :
-	Actor(filename, x, y, 20, 20, game) {
-	vx = -9;
+	Actor(filename, x, y, 40, 40, game) {
+	vx = 9;
+	vy = 0; // La gravedad inicial es 1
 	this->enemyShot = enemyShot;
 }
 

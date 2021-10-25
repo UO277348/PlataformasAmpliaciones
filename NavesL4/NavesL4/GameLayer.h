@@ -6,6 +6,7 @@
 
 #include "Enemy.h"
 #include "Minion.h"
+#include "Zombie.h"
 #include "Projectile.h"
 #include "Text.h"
 #include "Tile.h"
