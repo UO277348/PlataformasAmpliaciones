@@ -15,7 +15,6 @@ Minion::Minion(float x, float y, Game* game)
 	vx = 1;
 	vxIntelligence = -1;
 	vx = vxIntelligence;
-
 }
 
 
