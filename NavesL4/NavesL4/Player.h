@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Actor.h"
-#include "Projectile.h" 
+#include "Projectile.h"
+#include "Enemy.h"
 #include "Audio.h"
 #include "Animation.h" // incluir animacion 
 
@@ -10,6 +11,7 @@ class Player : public Actor
 public:
 	Player(float x, float y, Game* game);
 	Projectile* shoot();
+	bool saltoEncima(Enemy* enemy);
 	void update();
 	void jump();
 	void moveX(float axis);

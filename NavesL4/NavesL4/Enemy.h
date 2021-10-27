@@ -23,5 +23,7 @@ public:
 	int shootCadence = 0;
 	int shootTime = -1;
 	virtual Projectile* shootPlayer();
+
+	bool saltoEncima = false;
 };
 

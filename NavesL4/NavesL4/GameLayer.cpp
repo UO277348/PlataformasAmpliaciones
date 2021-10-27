@@ -234,11 +234,18 @@ void GameLayer::update() {
 
 	// Colisiones
 	for (auto const& enemy : enemies) {
-		if (player->isOverlap(enemy)) {
-			player->loseLife();
-			if (player->lifes <= 0) {
-				init();
-				return;
+		if (player->isOverlap(enemy) && enemy->state != game->stateDying && enemy->state != game->stateDead) {
+			if (player->saltoEncima(enemy)) {
+				enemy->impacted();
+				points++;
+				textPoints->content = to_string(points);
+			}
+			else{
+				player->loseLife();
+				if (player->lifes <= 0) {
+					init();
+					return;
+				}
 			}
 		}
 	}
@@ -264,7 +271,7 @@ void GameLayer::update() {
 
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
-			if (enemy->isOverlap(projectile) && !projectile->enemyShot && enemy->vidas == 1) {
+			if (enemy->isOverlap(projectile) && !projectile->enemyShot && enemy->vidas == 1 && !enemy->saltoEncima) {
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end();
@@ -280,7 +287,7 @@ void GameLayer::update() {
 
 
 			}
-			else if (enemy->isOverlap(projectile) && !projectile->enemyShot && enemy->vidas > 1) {
+			else if (enemy->isOverlap(projectile) && !projectile->enemyShot && enemy->vidas > 1 && !enemy->saltoEncima) {
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end();
