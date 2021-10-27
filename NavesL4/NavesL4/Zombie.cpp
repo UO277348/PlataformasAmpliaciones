@@ -23,6 +23,9 @@ Zombie::Zombie(float x, float y, Game* game)
 		200, 50, 4, 4, true, game);
 
 	animation = aIdleRight;
+
+	vx = 3;
+	vxIntelligence = -3;
 }
 
 void Zombie::update() {
