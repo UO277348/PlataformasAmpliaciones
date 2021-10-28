@@ -46,6 +46,8 @@ public:
 	Space* space;
 	float scrollX;
 	int mapWidth;
+	float scrollY;
+	int mapHeight;
 	list<Tile*> tiles;
 
 	Audio* audioBackground;
