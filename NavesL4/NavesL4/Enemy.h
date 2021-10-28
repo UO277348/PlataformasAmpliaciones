@@ -22,6 +22,8 @@ public:
 	int vidas = 1;
 	int shootCadence = 0;
 	int shootTime = -1;
+	int volarCadence = 0;
+	int volarTime = -1;
 	virtual Projectile* shootPlayer();
 
 	bool saltoEncima = false;

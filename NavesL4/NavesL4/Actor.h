@@ -11,9 +11,11 @@ public:
 	virtual bool isOverlap(Actor* actor);
 	bool containsPoint(int pointX, int pointY); // contiene punto
 	bool isInRender(float scrollX = 0);
+	bool collisionUp;
 	bool collisionDown;
 	bool outRight;
 	bool outLeft;
+	bool gravityEffect = true;
 
 	bool clicked; // Está pulsado
 	SDL_Texture* texture;
