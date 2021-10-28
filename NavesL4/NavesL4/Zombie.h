@@ -9,6 +9,7 @@ public:
 
 	void update() override;
 	Projectile* shootPlayer() override;
+	void impacted() override;
 	int orientation;
 
 	Animation* aIdleRight;

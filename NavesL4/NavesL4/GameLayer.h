@@ -8,6 +8,7 @@
 #include "Minion.h"
 #include "Zombie.h"
 #include "Cuervo.h"
+#include "Recolectable.h"
 #include "Projectile.h"
 #include "Text.h"
 #include "Tile.h"
@@ -59,6 +60,7 @@ public:
 	Actor* backgroundPoints;
 	list<Enemy*> enemies;
 	list<Projectile*> projectiles;
+	list<Recolectable*> recolectables;
 
 	bool controlContinue = false;
 	bool controlShoot = false;

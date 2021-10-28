@@ -37,6 +37,7 @@ void GameLayer::init() {
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
+	recolectables.clear();
 
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
@@ -102,6 +103,14 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
 		space->addDynamicActor(enemy);
+		break;
+	}
+	case 'V': {
+		Recolectable* r = new Recolectable(x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		r->y = r->y - r->height / 2;
+		recolectables.push_back(r);
+		space->addDynamicActor(r);
 		break;
 	}
 	case '1': {
@@ -240,6 +249,9 @@ void GameLayer::update() {
 	for (auto const& projectile : projectiles) {
 		projectile->update();
 	}
+	for (auto const& r : recolectables) {
+		r->update();
+	}
 
 
 	// Colisiones
@@ -264,6 +276,7 @@ void GameLayer::update() {
 
 	list<Enemy*> deleteEnemies;
 	list<Projectile*> deleteProjectiles;
+	list<Recolectable*> deleteRecos;
 	for (auto const& projectile : projectiles) {
 		if (projectile->isInRender(scrollX, scrollY) == false || projectile->vx == 0) {
 
@@ -319,6 +332,22 @@ void GameLayer::update() {
 		}
 	}
 
+	for (auto const& caja : recolectables) {
+		if (player->isOverlap(caja)) {
+			bool cajaInList = std::find(deleteRecos.begin(),
+				deleteRecos.end(),
+				caja) != deleteRecos.end();
+
+			if (!cajaInList) {
+				deleteRecos.push_back(caja);
+
+				player->lifes++;
+				points++;
+				textPoints->content = to_string(points);
+			}
+		}
+	}
+
 	for (auto const& enemy : enemies) {
 		if (enemy->state == game->stateDead) {
 			bool eInList = std::find(deleteEnemies.begin(),
@@ -344,6 +373,11 @@ void GameLayer::update() {
 	}
 	deleteProjectiles.clear();
 
+	for (auto const& delCaja : deleteRecos) {
+		recolectables.remove(delCaja);
+		space->removeDynamicActor(delCaja);
+	}
+	deleteRecos.clear();
 
 	cout << "update GameLayer" << endl;
 }
@@ -393,6 +427,10 @@ void GameLayer::draw() {
 	player->draw(scrollX, scrollY);
 	for (auto const& enemy : enemies) {
 		enemy->draw(scrollX, scrollY);
+	}
+
+	for (auto const& r : recolectables) {
+		r->draw(scrollX, scrollY);
 	}
 
 	backgroundPoints->draw();

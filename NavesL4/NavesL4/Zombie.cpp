@@ -119,3 +119,10 @@ Projectile* Zombie::shootPlayer() {
 		return NULL;
 	}
 }
+
+void Zombie::impacted() {
+	if (state != game->stateDying) {
+		state = game->stateDying;
+		shootTime = 500;
+	}
+}
