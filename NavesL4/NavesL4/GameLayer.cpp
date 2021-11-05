@@ -27,13 +27,19 @@ void GameLayer::init() {
 	audioBackground->play();
 
 	points = 0;
-	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.04, game);
+	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.07, game);
 	textPoints->content = to_string(points);
+
+	pointsRecolestables = 0;
+	textRecolectables = new Text("hola", WIDTH * 0.72, HEIGHT * 0.07, game);
+	textRecolectables->content = to_string(pointsRecolestables);
 
 	
 	background = new Background("res/fondo_2.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
-		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
+		WIDTH * 0.85, HEIGHT * 0.07, 24, 24, game);
+	backgroundRecolectables = new Actor("res/icono_recolectable.png",
+		WIDTH * 0.65, HEIGHT * 0.07, 40, 40, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
@@ -342,8 +348,8 @@ void GameLayer::update() {
 				deleteRecos.push_back(caja);
 
 				player->lifes++;
-				points++;
-				textPoints->content = to_string(points);
+				pointsRecolestables++;
+				textRecolectables->content = to_string(pointsRecolestables);
 			}
 		}
 	}
@@ -435,6 +441,9 @@ void GameLayer::draw() {
 
 	backgroundPoints->draw();
 	textPoints->draw();
+
+	backgroundRecolectables->draw();
+	textRecolectables->draw();
 
 	// HUD
 	if (game->input == game->inputMouse) {
