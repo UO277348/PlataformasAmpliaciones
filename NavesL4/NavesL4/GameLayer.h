@@ -8,6 +8,7 @@
 #include "Minion.h"
 #include "Zombie.h"
 #include "Cuervo.h"
+#include "Recolectable.h"
 #include "Projectile.h"
 #include "Text.h"
 #include "Tile.h"
@@ -53,12 +54,16 @@ public:
 	Audio* audioBackground;
 	Text* textPoints;
 	int points;
+	Text* textRecolectables;
+	int pointsRecolestables;
 	int newEnemyTime = 0;
 	Player* player;
 	Background* background;
 	Actor* backgroundPoints;
+	Actor* backgroundRecolectables;
 	list<Enemy*> enemies;
 	list<Projectile*> projectiles;
+	list<Recolectable*> recolectables;
 
 	bool controlContinue = false;
 	bool controlShoot = false;

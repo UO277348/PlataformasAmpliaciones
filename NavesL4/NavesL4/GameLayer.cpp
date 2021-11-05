@@ -27,16 +27,23 @@ void GameLayer::init() {
 	audioBackground->play();
 
 	points = 0;
-	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.04, game);
+	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.07, game);
 	textPoints->content = to_string(points);
+
+	pointsRecolestables = 0;
+	textRecolectables = new Text("hola", WIDTH * 0.72, HEIGHT * 0.07, game);
+	textRecolectables->content = to_string(pointsRecolestables);
 
 	
 	background = new Background("res/fondo_2.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
-		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
+		WIDTH * 0.85, HEIGHT * 0.07, 24, 24, game);
+	backgroundRecolectables = new Actor("res/icono_recolectable.png",
+		WIDTH * 0.65, HEIGHT * 0.07, 40, 40, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
+	recolectables.clear();
 
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
@@ -102,6 +109,14 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
 		space->addDynamicActor(enemy);
+		break;
+	}
+	case 'V': {
+		Recolectable* r = new Recolectable(x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		r->y = r->y - r->height / 2;
+		recolectables.push_back(r);
+		space->addDynamicActor(r);
 		break;
 	}
 	case '1': {
@@ -240,6 +255,9 @@ void GameLayer::update() {
 	for (auto const& projectile : projectiles) {
 		projectile->update();
 	}
+	for (auto const& r : recolectables) {
+		r->update();
+	}
 
 
 	// Colisiones
@@ -264,6 +282,7 @@ void GameLayer::update() {
 
 	list<Enemy*> deleteEnemies;
 	list<Projectile*> deleteProjectiles;
+	list<Recolectable*> deleteRecos;
 	for (auto const& projectile : projectiles) {
 		if (projectile->isInRender(scrollX, scrollY) == false || projectile->vx == 0) {
 
@@ -319,6 +338,22 @@ void GameLayer::update() {
 		}
 	}
 
+	for (auto const& caja : recolectables) {
+		if (player->isOverlap(caja)) {
+			bool cajaInList = std::find(deleteRecos.begin(),
+				deleteRecos.end(),
+				caja) != deleteRecos.end();
+
+			if (!cajaInList) {
+				deleteRecos.push_back(caja);
+
+				player->lifes++;
+				pointsRecolestables++;
+				textRecolectables->content = to_string(pointsRecolestables);
+			}
+		}
+	}
+
 	for (auto const& enemy : enemies) {
 		if (enemy->state == game->stateDead) {
 			bool eInList = std::find(deleteEnemies.begin(),
@@ -344,6 +379,11 @@ void GameLayer::update() {
 	}
 	deleteProjectiles.clear();
 
+	for (auto const& delCaja : deleteRecos) {
+		recolectables.remove(delCaja);
+		space->removeDynamicActor(delCaja);
+	}
+	deleteRecos.clear();
 
 	cout << "update GameLayer" << endl;
 }
@@ -395,8 +435,15 @@ void GameLayer::draw() {
 		enemy->draw(scrollX, scrollY);
 	}
 
+	for (auto const& r : recolectables) {
+		r->draw(scrollX, scrollY);
+	}
+
 	backgroundPoints->draw();
 	textPoints->draw();
+
+	backgroundRecolectables->draw();
+	textRecolectables->draw();
 
 	// HUD
 	if (game->input == game->inputMouse) {

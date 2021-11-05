@@ -174,9 +174,8 @@ void Player::loseLife() {
 }
 
 bool Player::saltoEncima(Enemy* enemy) {
-	if (y >= enemy->y && enemy->saltoEncima) {
+	if (y <= enemy->y && enemy->saltoEncima) {
 
-		lifes++;
 		onAir = false;
 		jump();
 
